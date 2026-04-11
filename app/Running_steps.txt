@@ -1,0 +1,24 @@
+step 1: activate the myenv : source myenv/bin/activate                 
+step 2 : run the project : python app/app.py
+
+after doing changes make sure to create a fresh requirements.txt
+run only command : pip freeze > requirements.txt
+
+EMPTY commit for streak
+
+git commit --allow-empty -m "Updated UI"
+git push origin main
+
+commit with changes 
+
+🔹 1. Check changes
+git status
+
+🔹 2. Add all changes
+git add .
+
+🔹 3. Commit changes
+git commit -m "Real weather API integrtion "
+
+🔹 4. Push to GitHub
+git push origin main

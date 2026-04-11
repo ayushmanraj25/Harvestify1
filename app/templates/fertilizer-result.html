@@ -1,0 +1,140 @@
+{% extends 'layout.html' %} {% block body %}
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: none;
+        }
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 20px;
+        }
+        .result-card {
+            border-left: 4px solid #28a745;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .advice-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .advice-list li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <div class="card">
+                    <div class="header text-center">
+                        <h2 class="mb-0">Fertilizer Recommendation Results</h2>
+                    </div>
+                    <div class="card-body p-5">
+                        {% if error %}
+                            <div class="alert alert-danger text-center">
+                                <h4>Error</h4>
+                                <p>{{ error }}</p>
+                            </div>
+                        {% else %}
+                            <h3 class="text-center mb-4" data-i18n-key="Recommendation for">Recommendation for <span class="text-success"><span class="predict-output">{{ crop }}</span></span></h3>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="card result-card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Current Soil Levels</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Nitrogen (N):</span>
+                                                    <strong>{{ current_levels.N }} kg/ha</strong>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Phosphorous (P):</span>
+                                                    <strong>{{ current_levels.P }} kg/ha</strong>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Potassium (K):</span>
+                                                    <strong>{{ current_levels.K }} kg/ha</strong>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>pH Level:</span>
+                                                    <strong>{{ current_levels.pH }}</strong>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="card result-card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Recommended Levels</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Nitrogen (N):</span>
+                                                    <strong class="text-success">{{ recommended_levels.N }} kg/ha</strong>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Phosphorous (P):</span>
+                                                    <strong class="text-success">{{ recommended_levels.P }} kg/ha</strong>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>Potassium (K):</span>
+                                                    <strong class="text-success">{{ recommended_levels.K }} kg/ha</strong>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    <span>pH Level:</span>
+                                                    <strong class="text-success">{{ recommended_levels.pH }}</strong>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h4 class="mb-3">Fertilizer Advice</h4>
+                                <ul class="advice-list">
+                                    {% for item in advice %}
+                                        <li class="predict-output">{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="text-center mt-5">
+                            <a href="/fertilizer" class="btn btn-primary" data-i18n-key="Back to Fertilizer Recommendation">Back to Fertilizer Recommendation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

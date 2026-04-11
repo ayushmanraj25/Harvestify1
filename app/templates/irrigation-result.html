@@ -1,0 +1,138 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<section class="tool-page">
+
+	<!-- HEADER -->
+	<div class="text-center mb-5">
+		<p class="eyebrow text-uppercase text-success mb-2">Irrigation Result</p>
+		<h2 class="mb-3 font-weight-bold">Your Smart Irrigation Plan 💧</h2>
+		<p class="text-muted">Optimized water usage for better yield and efficiency</p>
+	</div>
+
+	<!-- RESULT CARDS -->
+	<div class="row g-4">
+
+
+		<!-- WATER -->
+		<div class="col-md-6 col-lg-3 mb-4">
+			<div class="card border-0 shadow-lg text-center p-4 hover-card">
+				<div class="mb-3" style="font-size:42px;">💧</div>
+				<h6 class="text-muted">Water Needed</h6>
+				<h2 class="text-success font-weight-bold">{{ water }} <small>mm</small></h2>
+				<div class="progress mt-3" style="height:6px;">
+					<div class="progress-bar bg-success" style="width:80%"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- SCHEDULE -->
+		<div class="col-md-6 col-lg-3 mb-4">
+			<div class="card border-0 shadow-lg text-center p-4 hover-card">
+				<div class="mb-3" style="font-size:42px;">⏰</div>
+				<h6 class="text-muted">Schedule</h6>
+				<h5 class="font-weight-bold">{{ schedule }}</h5>
+			</div>
+		</div>
+
+		<!-- METHOD -->
+		<div class="col-md-6 col-lg-3 mb-4">
+			<div class="card border-0 shadow-lg text-center p-4 hover-card">
+				<div class="mb-3" style="font-size:42px;">🚿</div>
+				<h6 class="text-muted">Method</h6>
+				<h5 class="font-weight-bold text-info">{{ method }}</h5>
+			</div>
+		</div>
+
+		<!-- AI ADVICE -->
+		<div class="col-md-6 col-lg-3 mb-4">
+			<div class="card border-0 shadow-lg text-center p-4 hover-card">
+				<div class="mb-3" style="font-size:42px;">🤖</div>
+				<h6 class="text-muted">AI Advice</h6>
+				<h5 class="font-weight-bold text-warning">{{ ai_advice }}</h5>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- WEATHER INFO -->
+<div class="row mb-4 text-center">
+    <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-0">
+            <h6>🌡 Temperature</h6>
+            <h4 class="text-success">{{ temp }}°C</h4>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-0">
+            <h6>🌧 Rainfall</h6>
+            <h4 class="text-primary">{{ rainfall }} mm</h4>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-0">
+            <h6>💧 Humidity</h6>
+            <h4 class="text-info">{{ humidity }}%</h4>
+        </div>
+    </div>
+</div>
+
+	<!-- SMART SUMMARY -->
+	<div class="mt-5">
+		<div class="card border-0 shadow-lg p-5 text-center">
+			<h4 class="mb-3">🌱 Smart Summary</h4>
+			<p class="text-muted" style="font-size:17px;">
+				Based on your inputs, your field requires 
+				<strong class="text-success">{{ water }} mm</strong> of water.
+				Using <strong>{{ method }}</strong>, follow 
+				<strong>{{ schedule }}</strong> for best results.
+			</p>
+		</div>
+	</div>
+
+	<!-- EXTRA INSIGHT (NEW 🔥) -->
+	<div class="row mt-5">
+
+		<div class="col-md-6 mb-4">
+			<div class="card border-0 shadow-sm p-4">
+				<h6>💡 Efficiency Tip</h6>
+				<p class="text-muted small mb-0">
+					Water early morning or late evening to reduce evaporation and improve absorption.
+				</p>
+			</div>
+		</div>
+
+		<div class="col-md-6 mb-4">
+			<div class="card border-0 shadow-sm p-4">
+				<h6>🌦 Weather Impact</h6>
+				<p class="text-muted small mb-0">
+					Rainfall and temperature directly affect irrigation needs. Monitor regularly for best results.
+				</p>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- BUTTON -->
+	<div class="text-center mt-5">
+		<a href="{{ url_for('irrigation_page') }}" 
+		   class="btn btn-success btn-lg px-5 shadow hover-scale">
+			🔄 Try Again
+		</a>
+	</div>
+
+</section>
+
+<!-- OPTIONAL MICRO INTERACTION -->
+<style>
+.hover-card {
+	transition: all 0.3s ease;
+	border-radius: 16px;
+}
+.hover-card:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+</style>
+
+{% endblock %}

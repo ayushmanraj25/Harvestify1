@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ title if title else "Harvestify" }}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+
+    <style>
+        /* --- HARVESTIFY THEME COLORS --- */
+        :root {
+            --theme-green: #52b76c;      /* Primary button/accent green from screenshot */
+            --theme-green-hover: #45a05b;
+            --theme-dark: #2c3e50;       /* Dark slate for brand text */
+            --theme-bg-light: #f8fcf9;   /* Very soft green/white background */
+            --theme-header-bg: rgba(215, 243, 224, 0.95); /* Soft, fresh light green for the header */
+            --theme-footer-bg: #22303c;  /* Deep earthy slate/green for footer */
+        }
+
+        /* Base typography and background */
+        body.app-shell {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--theme-bg-light);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism Header - Now with Harvestify Light Green */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--theme-header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(82, 183, 108, 0.15); /* Subtle green border */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(82, 183, 108, 0.06); /* Subtle green tinted shadow */
+        }
+
+        .brand-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--theme-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-tagline {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--theme-green) !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .brand-mark {
+            height: 42px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover .brand-mark {
+            transform: scale(1.05) rotate(-3deg);
+        }
+
+        /* Smooth Nav Links */
+        .navbar-nav .nav-link {
+            font-weight: 600;
+            color: var(--theme-dark) !important; /* Made text slightly darker for contrast against new background */
+            margin: 0 0.5rem;
+            position: relative;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -5px;
+            left: 50%;
+            background-color: var(--theme-green);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .active .nav-link {
+            color: var(--theme-green) !important;
+            opacity: 1;
+        }
+
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .active .nav-link::after {
+            width: 100%;
+        }
+
+        /* Modernized Button matches screenshot */
+        .btn-success {
+            background-color: var(--theme-green);
+            border: none;
+            font-weight: 600;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(82, 183, 108, 0.3);
+            transition: all 0.3s ease;
+            color: white !important;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(82, 183, 108, 0.4);
+            background-color: var(--theme-green-hover);
+        }
+
+        /* Smooth Page Load Animation */
+        .app-main {
+            flex: 1;
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modern Alerts (Flash Messages) */
+        .alert {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            font-weight: 500;
+            animation: slideInDown 0.4s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- REDESIGNED FOOTER --- */
+        .app-footer {
+            background-color: var(--theme-footer-bg);
+            color: #ecf0f1;
+            margin-top: auto;
+            border-top: 4px solid var(--theme-green);
+        }
+
+        .app-footer .brand-title {
+            color: #ffffff;
+            font-size: 1.4rem;
+        }
+
+        .app-footer p.text-muted {
+            color: #aeb9c3 !important;
+        }
+        
+        .app-footer small.text-muted {
+            color: #7b8b9a !important;
+        }
+    </style>
+</head>
+
+<body class="app-shell">
+    <header class="app-header">
+        <nav class="navbar navbar-expand-lg navbar-light py-3">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Harvestify logo" class="brand-mark mr-3" />
+                    <div class="d-flex flex-column lh-1">
+                        <div class="brand-title">Harvestify</div>
+                        <small class="brand-tagline">Insightful farming decisions</small>
+                    </div>
+                </a>
+                
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto align-items-lg-center">
+                        <li class="nav-item {% if request.endpoint == 'home' %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                        </li>
+                        <li class="nav-item {% if 'crop' in request.endpoint %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('crop_recommend') }}">Crop</a>
+                        </li>
+                        <li class="nav-item {% if 'fertilizer' in request.endpoint %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('fertilizer_recommendation') }}">Fertilizer</a>
+                        </li>
+                        <li class="nav-item {% if 'disease' in request.endpoint %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('disease_prediction') }}">Disease</a>
+                        </li>
+                        <li class="nav-item {% if 'yield' in request.endpoint %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('Production_prediction') }}">Production</a>
+                        </li>
+                        <li class="nav-item {% if 'irrigation' in request.endpoint %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('irrigation_page') }}">Irrigation</a>
+                        </li>
+
+                        <li class="nav-item d-none d-lg-block mt-3 mt-lg-0 ml-lg-4">
+                            <a class="btn btn-success px-4 py-2" href="{{ url_for('crop_recommend') }}">Get Started</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="app-main py-5">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="mb-4">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            
+            {% block body %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="app-footer py-5">
+        <div class="container text-center">
+            <h5 class="mb-2 brand-title">Harvestify</h5>
+            <p class="mb-3 text-muted" style="font-size: 0.95rem;">Made with care by Ayushman</p>
+            <small class="text-muted font-weight-light">&copy; {{ current_year if current_year is defined else '2026' }} Harvestify. All rights reserved.</small>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        (function(){
+            try {
+                if (!window.jQuery || !jQuery.fn || !jQuery.fn.collapse) {
+                    var toggler = document.querySelector('.navbar-toggler');
+                    var collapse = document.getElementById('navbarResponsive');
+                    if (toggler && collapse) {
+                        toggler.addEventListener('click', function(e){
+                            e.preventDefault();
+                            collapse.classList.toggle('show');
+                        });
+                    }
+                }
+            } catch(err) {
+                console.error('Navbar diagnostic error', err);
+            }
+        })();
+    </script>
+
+    <script src="{{ url_for('static', filename='scripts/cities.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

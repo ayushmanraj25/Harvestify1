@@ -1,0 +1,12 @@
+
+myenv/
+venv/
+__pycache__/
+*.pycmyenv/
+myenv/
+myenv/
+venv/
+__pycache__/
+app.py.env
+.env
+.env

@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<section class="tool-page">
+
+	<div class="tool-intro text-center mb-5">
+		<p class="eyebrow text-uppercase mb-2 text-success">Disease diagnostics</p>
+		<h2 class="mb-3">AI-powered plant disease detection</h2>
+		<p class="text-muted">Upload a leaf image and get instant diagnosis 🌱</p>
+	</div>
+
+	<div class="tool-card shadow-lg p-4 rounded text-center">
+
+		<form id="uploadForm" method="post" enctype="multipart/form-data">
+
+			<!-- DROP ZONE -->
+			<label for="inputfile" id="dropzone"
+				style="display:block; border:2px dashed #28a745; padding:40px; border-radius:15px; cursor:pointer; transition:0.3s;">
+
+				<div style="font-size:40px;">📷</div>
+				<p class="mb-1">Drag & drop or click</p>
+				<small class="text-muted">JPG/PNG • Max 10MB</small>
+
+				<input type="file" name="file" id="inputfile"
+					accept="image/*" style="display:none;"
+					onchange="preview_image(event)">
+			</label>
+
+			<!-- PREVIEW -->
+			<div class="mt-4">
+				<img id="output-image"
+					class="img-fluid rounded shadow d-none"
+					style="max-height:250px;" />
+			</div>
+
+			<!-- LOADING -->
+			<div id="loading" class="mt-4 d-none">
+				<div class="spinner-border text-success"></div>
+				<p class="mt-2 text-muted">🧠 Analyzing plant health...</p>
+			</div>
+
+			<!-- RESULT -->
+			<div id="resultBox" class="mt-4 d-none p-3 rounded shadow"
+				style="background:#f0fff4;">
+				<h5 class="text-success">✅ Disease Detected</h5>
+				<p id="diseaseName" class="mb-1 fw-bold">Leaf Blight</p>
+				<p id="confidence" class="text-muted">Confidence: 92%</p>
+			</div>
+
+			<!-- BUTTON -->
+			<div class="mt-4">
+				<button class="btn btn-success btn-lg px-5"
+					type="submit">
+					🚀 Predict Disease
+				</button>
+			</div>
+
+		</form>
+	</div>
+</section>
+
+<script>
+	const dropzone = document.getElementById("dropzone");
+	const fileInput = document.getElementById("inputfile");
+	const preview = document.getElementById("output-image");
+	const loading = document.getElementById("loading");
+	const resultBox = document.getElementById("resultBox");
+
+	// DRAG EFFECT
+	dropzone.addEventListener("dragover", (e) => {
+		e.preventDefault();
+		dropzone.style.background = "#eafaf1";
+	});
+
+	dropzone.addEventListener("dragleave", () => {
+		dropzone.style.background = "white";
+	});
+
+	dropzone.addEventListener("drop", (e) => {
+		e.preventDefault();
+		fileInput.files = e.dataTransfer.files;
+		preview_image({ target: fileInput });
+	});
+
+	// PREVIEW
+	function preview_image(event) {
+		const file = event.target.files[0];
+		if (!file) return;
+
+		const reader = new FileReader();
+		reader.onload = function () {
+			preview.src = reader.result;
+			preview.classList.remove("d-none");
+		};
+		reader.readAsDataURL(file);
+	}
+
+	// FORM SUBMIT INTERACTION
+	document.getElementById("uploadForm").addEventListener("submit", function () {
+
+		// Show loading
+		loading.classList.remove("d-none");
+		resultBox.classList.add("d-none");
+
+		// Fake delay (for UI feel)
+		setTimeout(() => {
+			loading.classList.add("d-none");
+			resultBox.classList.remove("d-none");
+		}, 2000);
+	});
+</script>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<section class="tool-page">
+	
+	<div class="tool-intro text-center mb-5">
+		<p class="eyebrow text-uppercase mb-2 text-success">Irrigation Intelligence</p>
+		<h2 class="mb-3">Smart irrigation recommendation for your field.</h2>
+		<p class="text-muted">
+			Enter crop, soil, and weather details. Our system will calculate water requirements 
+			and provide AI-based irrigation suggestions to maximize yield and save water.
+		</p>
+	</div>
+
+	<div class="tool-card shadow-sm">
+		<h2>Irrigation Recommendation</h2>
+
+		<form action="/irrigation-predict" method="post">
+
+			<div class="input-grid">
+
+				<!-- Crop -->
+				<div class="form-group">
+					<label>Crop</label>
+					<select class="form-control" name="crop" required>
+						<option value="">Select Crop</option>
+						<option value="Rice">Rice</option>
+						<option value="Wheat">Wheat</option>
+						<option value="Maize">Maize</option>
+						<option value="Cotton">Cotton</option>
+						<option value="Sugarcane">Sugarcane</option>
+					</select>
+				</div>
+
+				<!-- Soil -->
+				<div class="form-group">
+					<label>Soil Type</label>
+					<select class="form-control" name="soil" required>
+						<option value="">Select Soil</option>
+						<option value="Sandy">Sandy</option>
+						<option value="Loamy">Loamy</option>
+						<option value="Clay">Clay</option>
+					</select>
+				</div>
+
+				 <!-- Temperature 
+				<div class="form-group">
+					<label>Temperature (°C)</label>
+					<input class="form-control" type="number" step="any"
+						name="temperature" placeholder="e.g 30" required>
+				</div>
+
+				 Rainfall 
+				<div class="form-group">
+					<label>Rainfall (mm)</label>
+					<input class="form-control" type="number" step="any"
+						name="rainfall" placeholder="e.g 100" required>
+				</div> -->
+
+				<!-- STATE -->
+<div class="form-group">
+	<label>State</label>
+	<select onchange="print_city('city', this.selectedIndex);" 
+			id="state" class="form-control" required>
+	</select>
+</div>
+
+<!-- CITY -->
+<div class="form-group">
+	<label>City</label>
+	<select id="city" name="city" class="form-control" required>
+	</select>
+</div>
+
+				<!-- Soil Moisture -->
+				<div class="form-group">
+					<label>Soil Moisture (%)</label>
+					<input class="form-control" type="number" step="any"
+						name="moisture" placeholder="e.g 30" required>
+				</div>
+
+	
+
+			</div>
+
+			<div class="text-center mt-4">
+				<button type="submit" class="btn btn-success btn-lg px-5">
+					💧 Get Irrigation Plan
+				</button>
+			</div>
+
+		</form>
+	</div>
+</section>
+
+{% block scripts %}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		print_state("state");   // 🔥 states auto load
+	});
+</script>
+{% endblock %}
+{% endblock %}

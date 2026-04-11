@@ -1,0 +1,156 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<section class="tool-page">
+	<div class="tool-intro text-center mb-5">
+		<p class="eyebrow text-uppercase mb-2 text-success">Production Intelligence</p>
+		<h2 class="mb-3">Predict crop production based on real field conditions.</h2>
+		<p class="text-muted"> Enter details such as crop type, season, state, cultivated area, rainfall,
+        fertilizer, and pesticide usage. Our intelligent model analyzes historical
+        yield and climate patterns to estimate expected production and help you plan
+        better farming decisions.</p>
+	</div>
+
+    <div class="tool-card shadow-sm">
+    <h2>Production Recommendation</h2>
+
+    <form action="/production-predict" method="post">
+        <div class="input-grid">
+            <div class="form-group">
+                <label>Crop</label>
+                <select class="form-control" name="Crop" required>
+                    <option value="">Select Crop</option>
+                    <option value="Maize">Maize</option>
+                    <option value="Rice">Rice</option>
+                    <option value="Moong(Green Gram)">Moong (Green Gram)</option>
+                    <option value="Sesamum">Sesamum</option>
+                    <option value="Urad">Urad</option>
+                    <option value="Groundnut">Groundnut</option>
+                    <option value="Potato">Potato</option>
+                    <option value="Sugarcane">Sugarcane</option>
+                    <option value="Ragi">Ragi</option>
+                    <option value="Small millets">Small millets</option>
+                    <option value="Onion">Onion</option>
+                    <option value="Rapeseed &Mustard">Rapeseed & Mustard</option>
+                    <option value="Bajra">Bajra</option>
+                    <option value="Arhar/Tur">Arhar/Tur</option>
+                    <option value="Sunflower">Sunflower</option>
+                    <option value="Jowar">Jowar</option>
+                    <option value="Dry chillies">Dry chillies</option>
+                    <option value="Gram">Gram</option>
+                    <option value="Other Kharif pulses">Other Kharif pulses</option>
+                    <option value="Wheat">Wheat</option>
+                    <option value="Horse-gram">Horse-gram</option>
+                    <option value="Tobacco">Tobacco</option>
+                    <option value="Peas & beans (Pulses)">Peas & beans (Pulses)</option>
+                    <option value="Other  Rabi pulses">Other Rabi pulses</option>
+                    <option value="Turmeric">Turmeric</option>
+                    <option value="Ginger">Ginger</option>
+                    <option value="Cotton(lint)">Cotton (lint)</option>
+                    <option value="Linseed">Linseed</option>
+                    <option value="Soyabean">Soyabean</option>
+                    <option value="Barley">Barley</option>
+                    <option value="Masoor">Masoor</option>
+                    <option value="Castor seed">Castor seed</option>
+                    <option value="Sweet potato">Sweet potato</option>
+                    <option value="Garlic">Garlic</option>
+                    <option value="Banana">Banana</option>
+                    <option value="Mesta">Mesta</option>
+                    <option value="Coriander">Coriander</option>
+                    <option value="Tapioca">Tapioca</option>
+                    <option value="Niger seed">Niger seed</option>
+                    <option value="Safflower">Safflower</option>
+                    <option value="Sannhamp">Sannhamp</option>
+                    <option value="Arecanut">Arecanut</option>
+                    <option value="Jute">Jute</option>
+                    <option value="Other Cereals">Other Cereals</option>
+                    <option value="Cashewnut">Cashewnut</option>
+                    <option value="Cowpea(Lobia)">Cowpea (Lobia)</option>
+                    <option value="other oilseeds">Other oilseeds</option>
+                    <option value="Black pepper">Black pepper</option>
+                    <option value="Moth">Moth</option>
+                    <option value="Cardamom">Cardamom</option>
+                    <option value="Khesari">Khesari</option>
+                    <option value="Coconut">Coconut</option>
+                    <option value="Guar seed">Guar seed</option>
+                    <option value="Oilseeds total">Oilseeds total</option>
+                    <option value="Other Summer Pulses">Other Summer Pulses</option>
+
+                </select>
+            </div>
+                
+
+            <div class="form-group">
+                <label>Season</label>
+                <select class="form-control" name="Season" required>
+
+                    <option value="">Select Season</option>
+                    <option value="Kharif">Kharif</option>
+                    <option value="Rabi">Rabi</option>
+                    <option value="Whole Year">Whole Year</option>
+                    <option value="Summer">Summer</option>
+                    <option value="Autumn">Autumn</option>
+                    <option value="Winter">Winter</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>State</label>
+                <select  class="form-control" name="State" required>
+                    <option value="">Select State</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="West Bengal">West Bengal</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Puducherry">Puducherry</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Delhi">Delhi</option>
+                </select>
+
+            </div>   
+            <div class="form-group">
+                <label>Area (in hectares)</label>
+                <input  class="form-control" type="number" step="any" name="Area" placeholder="e.g 5000" required >
+            </div>
+            <div class="form-group">
+                <label>Annual Rainfall (mm)</label>
+                <input class="form-control" type="number" step="any" name="Annual_Rainfall" placeholder="e.g 200"required>
+            </div>
+            <div class="form-group">
+                <label>Fertilizer (kg/ha)</label>
+                <input class="form-control" type="number" step="any" name="Fertilizer"  placeholder="e.g 20000" required>
+            </div>
+            <div class="form-group">
+                <label>Pesticide (kg/ha)</label>
+                <input class="form-control" type="number" step="any" name="Pesticide" placeholder="e.g 5000"required>
+            </div>       
+        </div>
+        <div class="text-center mt-4" >
+				<button type="submit" class="btn btn-success btn-lg px-5">Predict</button>
+		</div>
+    </form>
+</div>
+</section>
+{% endblock %}
