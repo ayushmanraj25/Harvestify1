@@ -107,23 +107,51 @@ import requests
 def get_weather(city):
     api_key = "ad6e51a0d43036d443635d75adb339a8"
 
-    city = city + ",IN"   # 🔥 IMPORTANT FIX
+    city_formatted = city + ",IN"   # 🔥 IMPORTANT FIX
 
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city_formatted}&appid={api_key}&units=metric"
 
-    response = requests.get(url).json()
+    try:
+        response_obj = requests.get(url, timeout=10)
+        response_obj.raise_for_status()
+        response = response_obj.json()
+    except requests.exceptions.RequestException as e:
+        print(f"API Request Error for {city}:", str(e))
+        return 30.0, 50.0, 0.0   # fallback
+    except ValueError:
+        print(f"Invalid JSON response for {city}")
+        return 30.0, 50.0, 0.0
 
-    print("City:", city)
-    print("Response:", response)
+    print(f"DEBUG - Weather API Response for {city}:", response)
 
-    # error handling
-    if response.get("cod") != 200:
-        print("API Error:", response)
-        return 30, 50, 0   # fallback
+    if response.get("cod") not in [200, "200"]:
+        print("API Error:", response.get("message", "Unknown error"))
+        return 30.0, 50.0, 0.0   # fallback
 
-    temp = response['main']['temp']
-    humidity = response['main']['humidity']
-    rainfall = response.get('rain', {}).get('1h', 0)
+    try:
+        temp = float(response['main']['temp'])
+        humidity = float(response['main']['humidity'])
+        
+        # OpenWeather returns rain data in 'rain' dict with '1h' or '3h' keys
+        rain_data = response.get('rain', {})
+        rainfall = float(rain_data.get('1h', rain_data.get('3h', 0.0)))
+
+        # Fallback to weather description if explicitly no rain amount is provided
+        if rainfall == 0.0 and 'weather' in response and len(response['weather']) > 0:
+            weather_main = response['weather'][0].get('main', '').lower()
+            weather_desc = response['weather'][0].get('description', '').lower()
+            
+            # If weather says rain/drizzle but no amount is given, assign a default moderate rainfall (e.g., 2.0 mm)
+            if 'rain' in weather_main or 'drizzle' in weather_main or 'rain' in weather_desc or 'drizzle' in weather_desc:
+                print(f"DEBUG - Rain detected from weather description ('{weather_desc}'), but no amount given. Setting default 2.0mm.")
+                rainfall = 2.0
+                
+    except KeyError as e:
+        print(f"Missing expected data in API response for {city}:", e)
+        return 30.0, 50.0, 0.0
+    except (ValueError, TypeError) as e:
+        print(f"Data type error in API response for {city}:", e)
+        return 30.0, 50.0, 0.0
 
     return temp, humidity, rainfall
 
@@ -493,6 +521,73 @@ def irrigation_predict():
         humidity=round(humidity, 1),
         title=title
     )
+
+# ===================== AI CHATBOT =====================
+import google.generativeai as genai
+
+@app.route('/ask-ai', methods=['POST'])
+def ask_ai():
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    if not api_key:
+        return {"error": "Gemini API key is not set in the .env file."}, 500
+        
+    genai.configure(api_key=api_key)
+
+    try:
+        data = request.get_json()
+        if not data or 'message' not in data:
+            return {"error": "No message provided"}, 400
+
+        user_message = data['message']
+        city = data.get('city', '')
+        crop = data.get('crop', '')
+        
+        feature_context = ""
+        # Dynamically fetch weather if city is passed
+        if city and city != 'Unknown':
+            try:
+                temp, humidity, rainfall = get_weather(city)
+                feature_context = f"Current weather in {city}: {temp}°C, Humidity: {humidity}%, Rainfall: {rainfall}mm. "
+            except Exception:
+                feature_context = f"City: {city}. "
+
+        if crop and crop != 'Unknown':
+            feature_context += f"Target Crop: {crop}. "
+
+        # Create system prompt
+        system_prompt = f"""You are 'Harvestify AI', an expert agriculture advisor specializing in Indian farming conditions.
+Your goal is to give practical, short, and farmer-friendly advice.
+Do not output long theoretical essays. Focus on actionable steps.
+Use simple language. If user asks in Hinglish (e.g. 'barish ke baad'), respond in easy-to-understand Hinglish/English.
+Context: {feature_context}"""
+
+        # Call Gemini API
+        try:
+            model = genai.GenerativeModel(model_name="gemini-pro")
+            full_prompt = f"{system_prompt}\n\nUser Question:\n{user_message}"
+            
+            response = model.generate_content(
+                full_prompt,
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.7,
+                    max_output_tokens=300,
+                )
+            )
+        except Exception as api_err:
+            print("Gemini API Error:", api_err)
+            return {"reply": f"Sorry, my AI brain encountered an error: {str(api_err)}. Please verify your API key and server connection."}, 200
+        
+        reply = response.text.strip()
+        
+        if not reply:
+            return {"reply": "I'm sorry, I couldn't generate an answer right now. Please try again."}, 200
+            
+        return {"reply": reply}, 200
+
+    except Exception as e:
+        print(f"Chatbot Error: {str(e)}")
+        return {"error": "Internal server error connecting to AI.", "details": str(e)}, 500
+
 # ===============================================================================================
 '''if __name__ == '__main__':
     app.run(debug=True)'''
