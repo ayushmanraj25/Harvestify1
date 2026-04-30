@@ -1,0 +1,417 @@
+<style>
+    /* --- GLOBAL DARK THEME OVERRIDES --- */
+    body.dark-theme {
+        --theme-bg-light: #121212;
+        --theme-header-bg: rgba(30, 30, 30, 0.95);
+        --theme-dark: #ffffff;
+        --theme-footer-bg: #1a1a1a;
+        color: #e0e0e0;
+    }
+    
+    body.dark-theme .navbar-light .navbar-nav .nav-link {
+        color: #e0e0e0 !important;
+    }
+    
+    body.dark-theme .navbar-light .navbar-brand .brand-title {
+        color: #ffffff;
+    }
+    
+    body.dark-theme .card {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+        border-color: #333;
+    }
+    
+    body.dark-theme .form-control {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        border-color: #444;
+    }
+
+    /* --- FLOATING SETTINGS BUTTON --- */
+    .floating-settings-btn {
+        position: fixed;
+        top: 120px;
+        right: 0;
+        transform: translateY(0);
+        background: var(--theme-header-bg);
+        border: 1px solid rgba(82, 183, 108, 0.3);
+        border-right: none;
+        border-radius: 12px 0 0 12px;
+        padding: 12px 10px 12px 15px;
+        cursor: pointer;
+        z-index: 1050;
+        box-shadow: -4px 4px 15px rgba(0,0,0,0.08);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--theme-dark);
+    }
+    
+    body.dark-theme .floating-settings-btn {
+        background: rgba(40, 40, 40, 0.95);
+        border-color: #444;
+        box-shadow: -4px 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .floating-settings-btn:hover {
+        padding-right: 20px;
+        color: var(--theme-green);
+    }
+    
+    .floating-settings-btn svg {
+        transition: transform 0.5s ease;
+    }
+    
+    .floating-settings-btn:hover svg {
+        transform: rotate(90deg);
+    }
+
+    /* --- PREMIUM SETTINGS SIDEBAR --- */
+    .settings-sidebar {
+        position: fixed;
+        top: 0;
+        right: -380px;
+        width: 380px;
+        height: 100vh;
+        background: rgba(248, 252, 249, 0.85);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        z-index: 2000;
+        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .settings-sidebar.open {
+        right: 0;
+    }
+    
+    body.dark-theme .settings-sidebar {
+        background: rgba(20, 20, 20, 0.85);
+        border-left: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .settings-header {
+        padding: 25px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    body.dark-theme .settings-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .settings-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--theme-dark);
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .settings-body {
+        padding: 20px;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    /* Premium Card Layout for Groups */
+    .setting-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.04);
+        transition: transform 0.2s ease;
+    }
+    
+    body.dark-theme .setting-card {
+        background: rgba(40, 40, 40, 0.6);
+        border: 1px solid rgba(255,255,255,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .setting-card-title {
+        font-weight: 600;
+        color: var(--theme-dark);
+        margin-bottom: 5px;
+        font-size: 1rem;
+    }
+
+    .setting-card-desc {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+        margin-bottom: 12px;
+    }
+    
+    body.dark-theme .setting-card-desc {
+        color: #aaa;
+    }
+
+    /* iOS Style Toggle Switch */
+    .ios-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 28px;
+    }
+
+    .ios-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .ios-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .ios-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .ios-slider {
+        background-color: var(--theme-green);
+    }
+
+    input:focus + .ios-slider {
+        box-shadow: 0 0 1px var(--theme-green);
+    }
+
+    input:checked + .ios-slider:before {
+        transform: translateX(22px);
+    }
+    
+    .switch-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Translate Widget Fixes */
+    .goog-te-gadget { color: transparent !important; font-size: 0; }
+    .goog-te-gadget .goog-te-combo {
+        width: 100%; padding: 10px; border-radius: 10px;
+        border: 1px solid #e0e0e0; background: #fafafa; color: #333;
+        font-family: 'Poppins', sans-serif; font-size: 0.9rem;
+        outline: none;
+    }
+    body.dark-theme .goog-te-combo {
+        background: #2d2d2d; color: #fff; border-color: #444;
+    }
+</style>
+
+<!-- Floating Settings Button -->
+<div id="floating-settings-btn" class="floating-settings-btn" title="Settings">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </svg>
+</div>
+
+<!-- Settings Sidebar HTML -->
+<div id="settings-sidebar" class="settings-sidebar">
+    <div class="settings-header">
+        <h5 class="settings-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2 text-success"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            Preferences
+        </h5>
+        <button id="close-settings" class="btn p-0 shadow-none border-0" style="color: #95a5a6;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+    
+    <div class="settings-body">
+        
+        <!-- Dark Mode -->
+        <div class="setting-card switch-row">
+            <div>
+                <div class="setting-card-title">Dark Mode</div>
+                <div class="setting-card-desc mb-0">Switch to a dark theme.</div>
+            </div>
+            <label class="ios-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="ios-slider"></span>
+            </label>
+        </div>
+
+        <!-- App Language -->
+        <div class="setting-card">
+            <div class="setting-card-title">App Language</div>
+            <div class="setting-card-desc">Translate the entire application.</div>
+            <div id="google_translate_element"></div>
+            <script type="text/javascript">
+                function googleTranslateElementInit() {
+                    new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,hi,bn,te,mr,ta,ur,gu,kn,or,pa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                }
+            </script>
+            <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        </div>
+        
+        <!-- Default City -->
+        <div class="setting-card">
+            <div class="setting-card-title">Default Location</div>
+            <div class="setting-card-desc">Auto-fill your city for predictions.</div>
+            <div class="input-group">
+                <input type="text" id="default-city-input" class="form-control border-0 bg-light" placeholder="e.g. Bhagalpur" style="border-radius: 8px 0 0 8px;">
+                <div class="input-group-append">
+                    <button class="btn btn-success" type="button" id="save-city-btn" style="border-radius: 0 8px 8px 0;">Save</button>
+                </div>
+            </div>
+            <small id="city-save-msg" class="text-success d-none mt-2 font-weight-bold">✓ Location Saved!</small>
+        </div>
+
+        <!-- Chatbot Memory -->
+        <div class="setting-card">
+            <div class="setting-card-title">AI Assistant Memory</div>
+            <div class="setting-card-desc">Clear the current conversation.</div>
+            <button class="btn btn-outline-danger btn-block mt-2" id="clear-ai-memory" style="border-radius: 8px; font-weight: 600;">
+                Clear AI Memory
+            </button>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Settings Logic JS -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const floatingBtn = document.getElementById('floating-settings-btn');
+        const closeSettingsBtn = document.getElementById('close-settings');
+        const settingsSidebar = document.getElementById('settings-sidebar');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const defaultCityInput = document.getElementById('default-city-input');
+        const saveCityBtn = document.getElementById('save-city-btn');
+        const citySaveMsg = document.getElementById('city-save-msg');
+        const clearAiMemory = document.getElementById('clear-ai-memory');
+
+        // Open/Close Sidebar
+        if (floatingBtn) {
+            floatingBtn.addEventListener('click', () => {
+                settingsSidebar.classList.add('open');
+            });
+        }
+        if (closeSettingsBtn) {
+            closeSettingsBtn.addEventListener('click', () => {
+                settingsSidebar.classList.remove('open');
+            });
+        }
+        
+        // Click outside to close settings
+        document.addEventListener('mousedown', (e) => {
+            if(settingsSidebar && settingsSidebar.classList.contains('open') && !settingsSidebar.contains(e.target) && !floatingBtn.contains(e.target)) {
+                settingsSidebar.classList.remove('open');
+            }
+        });
+
+        // Dark Mode Logic
+        if(localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            if (darkModeToggle) darkModeToggle.checked = true;
+        }
+
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    document.body.classList.add('dark-theme');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.remove('dark-theme');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+
+        // Apply dark-theme class to inputs in settings-card dynamically
+        const observer = new MutationObserver(() => {
+           if(document.body.classList.contains('dark-theme')) {
+               const cityInput = document.getElementById('default-city-input');
+               if (cityInput) {
+                   cityInput.classList.remove('bg-light');
+                   cityInput.style.backgroundColor = '#2d2d2d';
+                   cityInput.style.color = 'white';
+               }
+           } else {
+               const cityInput = document.getElementById('default-city-input');
+               if (cityInput) {
+                   cityInput.classList.add('bg-light');
+                   cityInput.style.backgroundColor = '';
+                   cityInput.style.color = '';
+               }
+           }
+        });
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        
+        // Initial check for city input color
+        if(document.body.classList.contains('dark-theme') && defaultCityInput) {
+            defaultCityInput.classList.remove('bg-light');
+            defaultCityInput.style.backgroundColor = '#2d2d2d';
+            defaultCityInput.style.color = 'white';
+        }
+
+        // Default City Logic
+        const savedCity = localStorage.getItem('defaultCity');
+        if(savedCity) {
+            if (defaultCityInput) defaultCityInput.value = savedCity;
+            // auto fill city inputs in page if they exist
+            const cityInputs = document.querySelectorAll('input[name="city"], input[id="city"]');
+            cityInputs.forEach(input => {
+                if(!input.value) input.value = savedCity;
+            });
+        }
+
+        if (saveCityBtn) {
+            saveCityBtn.addEventListener('click', () => {
+                localStorage.setItem('defaultCity', defaultCityInput.value.trim());
+                citySaveMsg.classList.remove('d-none');
+                setTimeout(() => citySaveMsg.classList.add('d-none'), 2000);
+                
+                // update page inputs immediately
+                const cityInputs = document.querySelectorAll('input[name="city"], input[id="city"]');
+                cityInputs.forEach(input => {
+                    input.value = defaultCityInput.value.trim();
+                });
+            });
+        }
+
+        // Clear AI Memory
+        if (clearAiMemory) {
+            clearAiMemory.addEventListener('click', () => {
+                document.dispatchEvent(new Event('clearChatbotMemory'));
+                
+                // Show temporary success feedback on button
+                const originalText = clearAiMemory.innerText;
+                clearAiMemory.innerText = 'Memory Cleared!';
+                clearAiMemory.classList.replace('btn-outline-danger', 'btn-success');
+                setTimeout(() => {
+                    clearAiMemory.innerText = originalText;
+                    clearAiMemory.classList.replace('btn-success', 'btn-outline-danger');
+                }, 2000);
+            });
+        }
+    });
+</script>

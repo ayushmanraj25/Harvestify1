@@ -541,6 +541,7 @@ def ask_ai():
         user_message = data['message']
         city = data.get('city', '')
         crop = data.get('crop', '')
+        history_data = data.get('history', [])
         
         feature_context = ""
         # Dynamically fetch weather if city is passed
@@ -558,19 +559,35 @@ def ask_ai():
         system_prompt = f"""You are 'Harvestify AI', an expert agriculture advisor specializing in Indian farming conditions.
 Your goal is to give practical, short, and farmer-friendly advice.
 Do not output long theoretical essays. Focus on actionable steps.
-Use simple language. If user asks in Hinglish (e.g. 'barish ke baad'), respond in easy-to-understand Hinglish/English.
+CRITICAL LANGUAGE INSTRUCTION:
+- If the user asks their question in English, you MUST reply entirely in English.
+- If the user asks their question in Hinglish (e.g., 'barish ke baad kya kare'), you MUST reply entirely in Hinglish.
+- If the user asks in pure Hindi, reply in pure Hindi.
+Always match the exact language and script (Latin or Devanagari) the user is using.
 Context: {feature_context}"""
 
         # Call Gemini API
         try:
-            model = genai.GenerativeModel(model_name="gemini-pro")
-            full_prompt = f"{system_prompt}\n\nUser Question:\n{user_message}"
+            model = genai.GenerativeModel(
+                model_name="gemini-2.5-flash",
+                system_instruction=system_prompt
+            )
             
-            response = model.generate_content(
-                full_prompt,
+            # Format history for Gemini chat session
+            formatted_history = []
+            for h in history_data:
+                role = "user" if h.get('isUser') else "model"
+                # skip empty messages just in case
+                if h.get('text'):
+                    formatted_history.append({"role": role, "parts": [h['text']]})
+            
+            chat = model.start_chat(history=formatted_history)
+            
+            response = chat.send_message(
+                user_message,
                 generation_config=genai.types.GenerationConfig(
                     temperature=0.7,
-                    max_output_tokens=300,
+                    max_output_tokens=500,
                 )
             )
         except Exception as api_err:
