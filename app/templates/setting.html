@@ -8,25 +8,22 @@
         color: #e0e0e0;
     }
     
-    body.dark-theme .navbar-light .navbar-nav .nav-link {
-        color: #e0e0e0 !important;
-    }
-    
-    body.dark-theme .navbar-light .navbar-brand .brand-title {
+    body.dark-theme .navbar-light .navbar-nav .nav-link { color: #e0e0e0 !important; }
+    body.dark-theme .navbar-light .navbar-brand .brand-title { color: #ffffff; }
+    body.dark-theme .card { background-color: #1e1e1e; color: #e0e0e0; border-color: #333; }
+    body.dark-theme .form-control { background-color: #2d2d2d; color: #ffffff; border-color: #444; }
+
+    /* High Contrast Mode Overrides */
+    body.high-contrast-theme {
+        --theme-bg-light: #000000;
+        --theme-header-bg: #000000;
+        --theme-dark: #ffffff;
+        --theme-green: #00ff00 !important;
         color: #ffffff;
+        font-weight: 600;
     }
-    
-    body.dark-theme .card {
-        background-color: #1e1e1e;
-        color: #e0e0e0;
-        border-color: #333;
-    }
-    
-    body.dark-theme .form-control {
-        background-color: #2d2d2d;
-        color: #ffffff;
-        border-color: #444;
-    }
+    body.high-contrast-theme .card { border: 2px solid #ffffff; }
+    body.high-contrast-theme .setting-card { border: 2px solid #00ff00 !important; }
 
     /* --- FLOATING SETTINGS BUTTON --- */
     .floating-settings-btn {
@@ -57,57 +54,72 @@
         box-shadow: -4px 4px 15px rgba(0,0,0,0.3);
     }
 
-    .floating-settings-btn:hover {
-        padding-right: 20px;
-        color: var(--theme-green);
-    }
-    
-    .floating-settings-btn svg {
-        transition: transform 0.5s ease;
-    }
-    
-    .floating-settings-btn:hover svg {
-        transform: rotate(90deg);
+    .floating-settings-btn:hover { padding-right: 20px; color: var(--theme-green); }
+    .floating-settings-btn svg { transition: transform 0.5s ease; }
+    .floating-settings-btn:hover svg { transform: rotate(90deg); }
+
+    /* --- PREMIUM SETTINGS MODAL --- */
+    .settings-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 1999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
     }
 
-    /* --- PREMIUM SETTINGS SIDEBAR --- */
-    .settings-sidebar {
+    .settings-overlay.show {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .settings-modal {
         position: fixed;
-        top: 0;
-        right: -380px;
-        width: 380px;
-        height: 100vh;
-        background: rgba(248, 252, 249, 0.85);
+        top: 120px;
+        right: 70px;
+        transform-origin: top right;
+        transform: scale(0.8);
+        width: 400px;
+        max-width: 90vw;
+        max-height: calc(100vh - 140px);
+        background: rgba(248, 252, 249, 0.95);
         backdrop-filter: blur(25px);
         -webkit-backdrop-filter: blur(25px);
+        border-radius: 20px;
         z-index: 2000;
-        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: -5px 15px 35px rgba(0,0,0,0.15);
         display: flex;
         flex-direction: column;
-        border-left: 1px solid rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.5);
     }
 
-    .settings-sidebar.open {
-        right: 0;
+    .settings-modal.show {
+        transform: scale(1);
+        opacity: 1;
+        pointer-events: all;
     }
     
-    body.dark-theme .settings-sidebar {
-        background: rgba(20, 20, 20, 0.85);
-        border-left: 1px solid rgba(255, 255, 255, 0.05);
+    body.dark-theme .settings-modal {
+        background: rgba(30, 30, 30, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
 
     .settings-header {
-        padding: 25px 20px;
+        padding: 20px 25px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
     
-    body.dark-theme .settings-header {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
+    body.dark-theme .settings-header { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 
     .settings-title {
         font-size: 1.25rem;
@@ -119,110 +131,84 @@
     }
 
     .settings-body {
-        padding: 20px;
+        padding: 10px 25px 25px 25px;
         flex: 1;
         overflow-y: auto;
+    }
+
+    /* Category headers */
+    .settings-category {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--theme-green);
+        margin: 20px 0 10px 5px;
+        letter-spacing: 1px;
     }
 
     /* Premium Card Layout for Groups */
     .setting-card {
         background: #ffffff;
-        border-radius: 16px;
-        padding: 18px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         border: 1px solid rgba(0,0,0,0.04);
         transition: transform 0.2s ease;
     }
     
     body.dark-theme .setting-card {
-        background: rgba(40, 40, 40, 0.6);
-        border: 1px solid rgba(255,255,255,0.05);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        background: rgba(45, 45, 45, 0.6);
+        border: 1px solid rgba(255,255,255,0.03);
     }
 
     .setting-card-title {
         font-weight: 600;
         color: var(--theme-dark);
-        margin-bottom: 5px;
-        font-size: 1rem;
+        margin-bottom: 3px;
+        font-size: 0.95rem;
     }
 
     .setting-card-desc {
         font-size: 0.8rem;
         color: #7f8c8d;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
     
-    body.dark-theme .setting-card-desc {
-        color: #aaa;
-    }
+    body.dark-theme .setting-card-desc { color: #aaa; }
 
     /* iOS Style Toggle Switch */
-    .ios-switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 28px;
-    }
-
-    .ios-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
+    .ios-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .ios-switch input { opacity: 0; width: 0; height: 0; }
     .ios-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background-color: #ccc;
-        transition: .4s;
-        border-radius: 34px;
+        position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc; transition: .4s; border-radius: 34px;
     }
-
     .ios-slider:before {
-        position: absolute;
-        content: "";
-        height: 20px;
-        width: 20px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+        background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
-
-    input:checked + .ios-slider {
-        background-color: var(--theme-green);
-    }
-
-    input:focus + .ios-slider {
-        box-shadow: 0 0 1px var(--theme-green);
-    }
-
-    input:checked + .ios-slider:before {
-        transform: translateX(22px);
-    }
+    input:checked + .ios-slider { background-color: var(--theme-green); }
+    input:checked + .ios-slider:before { transform: translateX(20px); }
     
-    .switch-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .switch-row { display: flex; justify-content: space-between; align-items: center; }
+
+    /* Select Dropdown */
+    .premium-select {
+        width: 100%; padding: 8px 12px; border-radius: 8px;
+        border: 1px solid #e0e0e0; background: #fafafa; color: #333;
+        font-size: 0.9rem; outline: none; cursor: pointer;
     }
+    body.dark-theme .premium-select { background: #2d2d2d; color: #fff; border-color: #444; }
 
     /* Translate Widget Fixes */
     .goog-te-gadget { color: transparent !important; font-size: 0; }
     .goog-te-gadget .goog-te-combo {
-        width: 100%; padding: 10px; border-radius: 10px;
+        width: 100%; padding: 8px 12px; border-radius: 8px;
         border: 1px solid #e0e0e0; background: #fafafa; color: #333;
-        font-family: 'Poppins', sans-serif; font-size: 0.9rem;
-        outline: none;
+        font-family: 'Poppins', sans-serif; font-size: 0.9rem; outline: none;
     }
-    body.dark-theme .goog-te-combo {
-        background: #2d2d2d; color: #fff; border-color: #444;
-    }
+    body.dark-theme .goog-te-combo { background: #2d2d2d; color: #fff; border-color: #444; }
 </style>
 
 <!-- Floating Settings Button -->
@@ -233,12 +219,13 @@
     </svg>
 </div>
 
-<!-- Settings Sidebar HTML -->
-<div id="settings-sidebar" class="settings-sidebar">
+<!-- Settings Overlay & Modal -->
+<div id="settings-overlay" class="settings-overlay"></div>
+<div id="settings-modal" class="settings-modal">
     <div class="settings-header">
         <h5 class="settings-title">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2 text-success"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            Preferences
+            App Settings
         </h5>
         <button id="close-settings" class="btn p-0 shadow-none border-0" style="color: #95a5a6;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -246,6 +233,8 @@
     </div>
     
     <div class="settings-body">
+        
+        <div class="settings-category">Appearance</div>
         
         <!-- Dark Mode -->
         <div class="setting-card switch-row">
@@ -257,6 +246,43 @@
                 <input type="checkbox" id="darkModeToggle">
                 <span class="ios-slider"></span>
             </label>
+        </div>
+
+        <!-- High Contrast Mode -->
+        <div class="setting-card switch-row">
+            <div>
+                <div class="setting-card-title">High Contrast</div>
+                <div class="setting-card-desc mb-0">Improve outdoor visibility.</div>
+            </div>
+            <label class="ios-switch">
+                <input type="checkbox" id="contrastToggle">
+                <span class="ios-slider"></span>
+            </label>
+        </div>
+
+        <div class="settings-category">Preferences</div>
+
+        <!-- Measurement Units -->
+        <div class="setting-card">
+            <div class="setting-card-title">Measurement Units</div>
+            <div class="setting-card-desc">Choose between Metric or Imperial.</div>
+            <select id="unit-select" class="premium-select">
+                <option value="metric">Metric (°C, mm, kg/ha)</option>
+                <option value="imperial">Imperial (°F, inches, lbs/ac)</option>
+            </select>
+        </div>
+
+        <!-- Default City -->
+        <div class="setting-card">
+            <div class="setting-card-title">Default Location</div>
+            <div class="setting-card-desc">Auto-fill your city for predictions.</div>
+            <div class="input-group">
+                <input type="text" id="default-city-input" class="form-control border-0 bg-light" placeholder="e.g. Bhagalpur" style="border-radius: 8px 0 0 8px;">
+                <div class="input-group-append">
+                    <button class="btn btn-success" type="button" id="save-city-btn" style="border-radius: 0 8px 8px 0;">Save</button>
+                </div>
+            </div>
+            <small id="city-save-msg" class="text-success d-none mt-2 font-weight-bold">✓ Location Saved!</small>
         </div>
 
         <!-- App Language -->
@@ -271,26 +297,37 @@
             </script>
             <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         </div>
-        
-        <!-- Default City -->
-        <div class="setting-card">
-            <div class="setting-card-title">Default Location</div>
-            <div class="setting-card-desc">Auto-fill your city for predictions.</div>
-            <div class="input-group">
-                <input type="text" id="default-city-input" class="form-control border-0 bg-light" placeholder="e.g. Bhagalpur" style="border-radius: 8px 0 0 8px;">
-                <div class="input-group-append">
-                    <button class="btn btn-success" type="button" id="save-city-btn" style="border-radius: 0 8px 8px 0;">Save</button>
-                </div>
+
+        <div class="settings-category">Accessibility & Data</div>
+
+        <!-- Voice Assistant -->
+        <div class="setting-card switch-row">
+            <div>
+                <div class="setting-card-title">Voice Assistant</div>
+                <div class="setting-card-desc mb-0">Read out AI advice automatically.</div>
             </div>
-            <small id="city-save-msg" class="text-success d-none mt-2 font-weight-bold">✓ Location Saved!</small>
+            <label class="ios-switch">
+                <input type="checkbox" id="voiceToggle">
+                <span class="ios-slider"></span>
+            </label>
         </div>
 
-        <!-- Chatbot Memory -->
+        <!-- Data Saver Mode -->
+        <div class="setting-card switch-row">
+            <div>
+                <div class="setting-card-title">Data Saver Mode</div>
+                <div class="setting-card-desc mb-0">Disable animations to save data.</div>
+            </div>
+            <label class="ios-switch">
+                <input type="checkbox" id="dataSaverToggle">
+                <span class="ios-slider"></span>
+            </label>
+        </div>
+
+        <!-- Clear Memory -->
         <div class="setting-card">
-            <div class="setting-card-title">AI Assistant Memory</div>
-            <div class="setting-card-desc">Clear the current conversation.</div>
-            <button class="btn btn-outline-danger btn-block mt-2" id="clear-ai-memory" style="border-radius: 8px; font-weight: 600;">
-                Clear AI Memory
+            <button class="btn btn-outline-danger btn-block" id="clear-ai-memory" style="border-radius: 8px; font-weight: 600;">
+                Clear App Data & AI Memory
             </button>
         </div>
         
@@ -302,38 +339,55 @@
     document.addEventListener("DOMContentLoaded", function() {
         const floatingBtn = document.getElementById('floating-settings-btn');
         const closeSettingsBtn = document.getElementById('close-settings');
-        const settingsSidebar = document.getElementById('settings-sidebar');
+        const settingsModal = document.getElementById('settings-modal');
+        const settingsOverlay = document.getElementById('settings-overlay');
+        
         const darkModeToggle = document.getElementById('darkModeToggle');
+        const contrastToggle = document.getElementById('contrastToggle');
+        const voiceToggle = document.getElementById('voiceToggle');
+        const dataSaverToggle = document.getElementById('dataSaverToggle');
+        const unitSelect = document.getElementById('unit-select');
+        
         const defaultCityInput = document.getElementById('default-city-input');
         const saveCityBtn = document.getElementById('save-city-btn');
         const citySaveMsg = document.getElementById('city-save-msg');
         const clearAiMemory = document.getElementById('clear-ai-memory');
 
-        // Open/Close Sidebar
-        if (floatingBtn) {
-            floatingBtn.addEventListener('click', () => {
-                settingsSidebar.classList.add('open');
-            });
-        }
-        if (closeSettingsBtn) {
-            closeSettingsBtn.addEventListener('click', () => {
-                settingsSidebar.classList.remove('open');
-            });
-        }
-        
-        // Click outside to close settings
-        document.addEventListener('mousedown', (e) => {
-            if(settingsSidebar && settingsSidebar.classList.contains('open') && !settingsSidebar.contains(e.target) && !floatingBtn.contains(e.target)) {
-                settingsSidebar.classList.remove('open');
-            }
-        });
+        // Open Modal
+        const openSettings = () => {
+            settingsModal.classList.add('show');
+            settingsOverlay.classList.add('show');
+        };
 
-        // Dark Mode Logic
+        // Close Modal
+        const closeSettings = () => {
+            settingsModal.classList.remove('show');
+            settingsOverlay.classList.remove('show');
+        };
+
+        if (floatingBtn) floatingBtn.addEventListener('click', openSettings);
+        if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', closeSettings);
+        if (settingsOverlay) settingsOverlay.addEventListener('click', closeSettings);
+
+        // Load Preferences
         if(localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-theme');
             if (darkModeToggle) darkModeToggle.checked = true;
         }
-
+        if(localStorage.getItem('contrast') === 'high') {
+            document.body.classList.add('high-contrast-theme');
+            if (contrastToggle) contrastToggle.checked = true;
+        }
+        if(localStorage.getItem('voice') === 'enabled') {
+            if (voiceToggle) voiceToggle.checked = true;
+        }
+        if(localStorage.getItem('dataSaver') === 'enabled') {
+            if (dataSaverToggle) dataSaverToggle.checked = true;
+        }
+        if(localStorage.getItem('unit')) {
+            if (unitSelect) unitSelect.value = localStorage.getItem('unit');
+        }
+        // Toggles Logic
         if (darkModeToggle) {
             darkModeToggle.addEventListener('change', (e) => {
                 if(e.target.checked) {
@@ -346,38 +400,58 @@
             });
         }
 
-        // Apply dark-theme class to inputs in settings-card dynamically
+        if (contrastToggle) {
+            contrastToggle.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    document.body.classList.add('high-contrast-theme');
+                    localStorage.setItem('contrast', 'high');
+                } else {
+                    document.body.classList.remove('high-contrast-theme');
+                    localStorage.setItem('contrast', 'normal');
+                }
+            });
+        }
+
+        if (voiceToggle) {
+            voiceToggle.addEventListener('change', (e) => {
+                localStorage.setItem('voice', e.target.checked ? 'enabled' : 'disabled');
+            });
+        }
+
+        if (dataSaverToggle) {
+            dataSaverToggle.addEventListener('change', (e) => {
+                localStorage.setItem('dataSaver', e.target.checked ? 'enabled' : 'disabled');
+            });
+        }
+
+        if (unitSelect) {
+            unitSelect.addEventListener('change', (e) => {
+                localStorage.setItem('unit', e.target.value);
+            });
+        }
+
+        // Dark theme input background dynamic fix
         const observer = new MutationObserver(() => {
-           if(document.body.classList.contains('dark-theme')) {
-               const cityInput = document.getElementById('default-city-input');
-               if (cityInput) {
-                   cityInput.classList.remove('bg-light');
-                   cityInput.style.backgroundColor = '#2d2d2d';
-                   cityInput.style.color = 'white';
+           if(document.body.classList.contains('dark-theme') || document.body.classList.contains('high-contrast-theme')) {
+               if (defaultCityInput) {
+                   defaultCityInput.classList.remove('bg-light');
+                   defaultCityInput.style.backgroundColor = '#2d2d2d';
+                   defaultCityInput.style.color = 'white';
                }
            } else {
-               const cityInput = document.getElementById('default-city-input');
-               if (cityInput) {
-                   cityInput.classList.add('bg-light');
-                   cityInput.style.backgroundColor = '';
-                   cityInput.style.color = '';
+               if (defaultCityInput) {
+                   defaultCityInput.classList.add('bg-light');
+                   defaultCityInput.style.backgroundColor = '';
+                   defaultCityInput.style.color = '';
                }
            }
         });
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-        
-        // Initial check for city input color
-        if(document.body.classList.contains('dark-theme') && defaultCityInput) {
-            defaultCityInput.classList.remove('bg-light');
-            defaultCityInput.style.backgroundColor = '#2d2d2d';
-            defaultCityInput.style.color = 'white';
-        }
 
         // Default City Logic
         const savedCity = localStorage.getItem('defaultCity');
         if(savedCity) {
             if (defaultCityInput) defaultCityInput.value = savedCity;
-            // auto fill city inputs in page if they exist
             const cityInputs = document.querySelectorAll('input[name="city"], input[id="city"]');
             cityInputs.forEach(input => {
                 if(!input.value) input.value = savedCity;
@@ -390,7 +464,6 @@
                 citySaveMsg.classList.remove('d-none');
                 setTimeout(() => citySaveMsg.classList.add('d-none'), 2000);
                 
-                // update page inputs immediately
                 const cityInputs = document.querySelectorAll('input[name="city"], input[id="city"]');
                 cityInputs.forEach(input => {
                     input.value = defaultCityInput.value.trim();
@@ -398,19 +471,21 @@
             });
         }
 
-        // Clear AI Memory
+        // Clear App Data
         if (clearAiMemory) {
             clearAiMemory.addEventListener('click', () => {
+                localStorage.clear();
                 document.dispatchEvent(new Event('clearChatbotMemory'));
                 
-                // Show temporary success feedback on button
+                // Show temporary success feedback
                 const originalText = clearAiMemory.innerText;
-                clearAiMemory.innerText = 'Memory Cleared!';
+                clearAiMemory.innerText = 'All Data Cleared!';
                 clearAiMemory.classList.replace('btn-outline-danger', 'btn-success');
                 setTimeout(() => {
                     clearAiMemory.innerText = originalText;
                     clearAiMemory.classList.replace('btn-success', 'btn-outline-danger');
-                }, 2000);
+                    window.location.reload(); // Reload to reset theme
+                }, 1000);
             });
         }
     });

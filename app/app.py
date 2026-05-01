@@ -481,33 +481,70 @@ def irrigation_predict():
     elif soil == "Clay":
         water_needed -= 30
 
-    # ------------------ SCHEDULING ------------------
-    if crop == "Rice":
-        schedule = "Daily irrigation required"
-    elif crop == "Wheat":
-        schedule = "Irrigate every 5-7 days"
-    else:
-        schedule = "Irrigate every 3-5 days"
+    # ------------------ SMART AI PLAN (SCHEDULE, METHOD, ADVICE) ------------------
+    try:
+        api_key = os.environ.get("GEMINI_API_KEY", "")
+        if api_key:
+            import google.generativeai as genai
+            import json
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel(model_name="gemini-2.5-flash")
+            
+            prompt = f"""Act as an expert Indian agriculture advisor. Based on these real-time conditions:
+Crop: {crop}, Soil: {soil}, City: {city}, Temperature: {temp}°C, Humidity: {humidity}%, Rainfall: {rainfall}mm, Soil Moisture: {moisture}%.
+Provide an irrigation plan in strictly valid JSON format exactly like this:
+{{
+  "schedule": "e.g., Irrigate every 3-5 days",
+  "method": "e.g., Drip irrigation recommended",
+  "ai_advice": "e.g., High humidity, reduce irrigation slightly. (max 15 words)"
+}}
+Output ONLY the JSON object, nothing else."""
+            
+            response = model.generate_content(prompt)
+            response_text = response.text.strip()
+            
+            # Clean markdown formatting if present
+            if response_text.startswith("```json"):
+                response_text = response_text[7:-3].strip()
+            elif response_text.startswith("```"):
+                response_text = response_text[3:-3].strip()
+                
+            parsed_data = json.loads(response_text)
+            
+            schedule = parsed_data.get("schedule", "Irrigate according to standard crop needs")
+            method = parsed_data.get("method", "Standard irrigation recommended")
+            ai_advice = parsed_data.get("ai_advice", "Conditions normal, follow recommended schedule")
+            
+        else:
+            raise ValueError("No Gemini API Key found")
+            
+    except Exception as e:
+        print("Gemini API error or missing key in irrigation predict:", e)
+        # ------------------ FALLBACK LOGIC ------------------
+        if crop == "Rice":
+            schedule = "Daily irrigation required"
+        elif crop == "Wheat":
+            schedule = "Irrigate every 5-7 days"
+        else:
+            schedule = "Irrigate every 3-5 days"
 
-    # ------------------ METHOD ------------------
-    if crop in ["Cotton", "Sugarcane"]:
-        method = "Drip irrigation recommended"
-    elif crop == "Rice":
-        method = "Flood irrigation recommended"
-    else:
-        method = "Sprinkler irrigation recommended"
+        if crop in ["Cotton", "Sugarcane"]:
+            method = "Drip irrigation recommended"
+        elif crop == "Rice":
+            method = "Flood irrigation recommended"
+        else:
+            method = "Sprinkler irrigation recommended"
 
-    # ------------------ SMART AI LOGIC ------------------
-    if rainfall > 50:
-        ai_advice = "Heavy rain expected , skip irrigation"
-    elif humidity > 80:
-        ai_advice = "High humidity , reduce irrigation"
-    elif moisture < 30:
-        ai_advice = "Soil dry , irrigate immediately (within 12 hours)"
-    elif temp > 35:
-        ai_advice = "High temperature , increase irrigation slightly"
-    else:
-        ai_advice = "Conditions normal , follow recommended schedule"
+        if rainfall > 50:
+            ai_advice = "Heavy rain expected, skip irrigation"
+        elif humidity > 80:
+            ai_advice = "High humidity, reduce irrigation"
+        elif moisture < 30:
+            ai_advice = "Soil dry, irrigate immediately"
+        elif temp > 35:
+            ai_advice = "High temperature, increase irrigation slightly"
+        else:
+            ai_advice = "Conditions normal, follow recommended schedule"
 
     # ------------------ RETURN ------------------
     return render_template(
@@ -556,14 +593,18 @@ def ask_ai():
             feature_context += f"Target Crop: {crop}. "
 
         # Create system prompt
-        system_prompt = f"""You are 'Harvestify AI', an expert agriculture advisor specializing in Indian farming conditions.
-Your goal is to give practical, short, and farmer-friendly advice.
-Do not output long theoretical essays. Focus on actionable steps.
+        system_prompt = f"""You are 'Harvestify AI', an advanced agricultural AI assistant based on ChatGPT architecture.
+You provide accurate answers regarding agriculture, crops, diseases, and farming practices.
+Keep your answers CONCISE and to the point. Depending on the complexity of the question, your answer length should be dynamically sized between 20 to 120 words maximum.
+Do not output long essays. Use bold text for important keywords. Do NOT use large markdown headings (# or ##), just use normal text and bullet points.
+
 CRITICAL LANGUAGE INSTRUCTION:
-- If the user asks their question in English, you MUST reply entirely in English.
-- If the user asks their question in Hinglish (e.g., 'barish ke baad kya kare'), you MUST reply entirely in Hinglish.
-- If the user asks in pure Hindi, reply in pure Hindi.
-Always match the exact language and script (Latin or Devanagari) the user is using.
+You MUST analyze the user's input language and match it perfectly:
+1. If the user writes in PURE ENGLISH (e.g., "Why do my leaves have holes?"), you MUST reply entirely in PURE ENGLISH. Do not use Hindi words or scripts.
+2. If the user writes in HINGLISH (e.g., "Patton me ched kyu hai?"), you MUST reply in HINGLISH (Hindi written in English alphabet).
+3. If the user writes in PURE HINDI (e.g., "पत्ते में छेद क्यों है?"), reply in PURE HINDI (Devanagari script).
+Failure to match the exact language and script of the user is strictly forbidden.
+
 Context: {feature_context}"""
 
         # Call Gemini API
@@ -587,7 +628,7 @@ Context: {feature_context}"""
                 user_message,
                 generation_config=genai.types.GenerationConfig(
                     temperature=0.7,
-                    max_output_tokens=500,
+                    max_output_tokens=2048,
                 )
             )
         except Exception as api_err:

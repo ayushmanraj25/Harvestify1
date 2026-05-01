@@ -132,18 +132,23 @@
 
 .msg-bubble {
     max-width: 85%;
-    padding: 10px 15px;
-    border-radius: 18px;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    line-height: normal;
     word-wrap: break-word;
 }
 
 /* Markdown styling inside bubble */
-.msg-bubble p { margin-bottom: 0.5rem; }
+.msg-bubble p, .msg-bubble h1, .msg-bubble h2, .msg-bubble h3, .msg-bubble h4, .msg-bubble h5, .msg-bubble h6, .msg-bubble li { 
+    font-size: 12px !important; 
+    line-height: normal !important; 
+    margin-bottom: 0.4rem; 
+    margin-top: 0;
+}
 .msg-bubble p:last-child { margin-bottom: 0; }
-.msg-bubble strong { font-weight: 600; color: #fff; }
-.msg-bubble ul, .msg-bubble ol { margin-bottom: 0.5rem; padding-left: 1.5rem; }
+.msg-bubble strong, .msg-bubble b, .msg-bubble h1, .msg-bubble h2, .msg-bubble h3 { font-weight: bold !important; color: #fff; }
+.msg-bubble ul, .msg-bubble ol { margin-bottom: 0.4rem; padding-left: 1.2rem; }
 
 .ai-msg .msg-bubble {
     background: #2d2d2d;
