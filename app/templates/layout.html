@@ -79,12 +79,15 @@
         /* Smooth Nav Links */
         .navbar-nav .nav-link {
             font-weight: 600;
-            color: var(--theme-dark) !important; /* Made text slightly darker for contrast against new background */
-            margin: 0 0.5rem;
+            color: var(--theme-dark) !important;
+            margin: 0 0.25rem;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
             position: relative;
             transition: color 0.3s ease;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             opacity: 0.85;
+            white-space: nowrap;
         }
 
         .navbar-nav .nav-link::after {
@@ -188,11 +191,11 @@
     <header class="app-header">
         <nav class="navbar navbar-expand-lg navbar-light py-3">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Harvestify logo" class="brand-mark mr-3" />
+                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}" style="min-width: max-content;">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Harvestify logo" class="brand-mark mr-2" />
                     <div class="d-flex flex-column lh-1">
                         <div class="brand-title">Harvestify</div>
-                        <small class="brand-tagline">Insightful farming decisions</small>
+                        <small class="brand-tagline d-none d-xl-block">Insightful farming decisions</small>
                     </div>
                 </a>
                 
@@ -220,6 +223,9 @@
                         </li>
                         <li class="nav-item {% if 'irrigation' in request.endpoint %}active{% endif %}">
                             <a class="nav-link" href="{{ url_for('irrigation_page') }}">Irrigation</a>
+                        </li>
+                        <li class="nav-item {% if 'mandi' in request.endpoint %}active{% endif %}">
+                            <a class="nav-link" href="{{ url_for('mandi_page') }}">Mandi&nbsp;Prices</a>
                         </li>
 
                         <li class="nav-item d-none d-lg-block mt-3 mt-lg-0 ml-lg-4">

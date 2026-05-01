@@ -559,6 +559,33 @@ Output ONLY the JSON object, nothing else."""
         title=title
     )
 
+# ===================== MANDI PRICES =====================
+import json
+
+@app.route('/mandi')
+def mandi_page():
+    title = 'Harvestify - Live Mandi Prices'
+    return render_template('mandi.html', title=title)
+
+@app.route('/api/mandi-prices')
+def api_mandi_prices():
+    state = request.args.get('state', '').lower()
+    crop = request.args.get('crop', '').lower()
+    
+    try:
+        with open('app/static/data/fallback_mandi_prices.json', 'r') as f:
+            all_data = json.load(f)
+            
+        filtered_data = all_data
+        if state:
+            filtered_data = [d for d in filtered_data if state in d.get('state', '').lower()]
+        if crop:
+            filtered_data = [d for d in filtered_data if crop in d.get('commodity', '').lower()]
+            
+        return {"status": "success", "data": filtered_data}, 200
+    except Exception as e:
+        return {"status": "error", "message": "Failed to load market data: " + str(e)}, 500
+
 # ===================== AI CHATBOT =====================
 import google.generativeai as genai
 

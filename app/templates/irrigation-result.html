@@ -46,10 +46,10 @@
 
 		<!-- AI ADVICE -->
 		<div class="col-md-6 col-lg-3 mb-4">
-			<div class="card border-0 shadow-lg text-center p-4 hover-card">
+			<div class="card border-0 shadow-lg text-center p-4 hover-card" style="position: relative;">
 				<div class="mb-3" style="font-size:42px;">🤖</div>
 				<h6 class="text-muted">AI Advice</h6>
-				<h5 class="font-weight-bold text-warning">{{ ai_advice }}</h5>
+				<h5 class="font-weight-bold text-warning" id="ai-advice-text">{{ ai_advice }}</h5>
 			</div>
 		</div>
 
@@ -134,5 +134,56 @@
 	box-shadow: 0 15px 35px rgba(0,0,0,0.1);
 }
 </style>
+
+<!-- Text to Speech Logic -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const adviceText = document.getElementById('ai-advice-text') ? document.getElementById('ai-advice-text').innerText : "";
+    
+    function speakAdvice() {
+        if ('speechSynthesis' in window && adviceText) {
+            window.speechSynthesis.cancel(); // Stop any previous speech
+            const msg = new SpeechSynthesisUtterance(adviceText);
+            
+            // Load voices and pick a good one
+            let voices = window.speechSynthesis.getVoices();
+            let selectedVoice = null;
+            
+            // Try to find a premium Google voice first (sounds best on Chrome)
+            selectedVoice = voices.find(v => v.name.includes("Google UK English Female") || v.name.includes("Google US English"));
+            
+            // Fallback for Mac: 'Samantha', 'Veena', or 'Rishi'
+            if (!selectedVoice) {
+                selectedVoice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Veena') || v.name.includes('Rishi'));
+            }
+            
+            // Fallback to any Indian English or standard English
+            if (!selectedVoice) {
+                selectedVoice = voices.find(v => v.lang === 'en-IN') || voices.find(v => v.lang.startsWith('en'));
+            }
+
+            if (selectedVoice) {
+                msg.voice = selectedVoice;
+            } else {
+                msg.lang = 'en-IN'; // Ultimate fallback
+            }
+
+            msg.rate = 0.95; // Optimal speed
+            msg.pitch = 1.0; // Normal pitch
+            window.speechSynthesis.speak(msg);
+        }
+    }
+
+    // Voices load asynchronously in some browsers. Wait for them.
+    if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = function() {
+            setTimeout(speakAdvice, 500);
+            window.speechSynthesis.onvoiceschanged = null; // Prevent multiple triggers
+        };
+    } else {
+        setTimeout(speakAdvice, 800); 
+    }
+});
+</script>
 
 {% endblock %}
