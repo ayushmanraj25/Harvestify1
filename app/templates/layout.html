@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
 
     <style>
@@ -162,27 +162,116 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- REDESIGNED FOOTER --- */
+        /* --- REDESIGNED PREMIUM FOOTER --- */
         .app-footer {
-            background-color: var(--theme-footer-bg);
+            background-color: #1a2634; /* Darker, richer navy/slate */
             color: #ecf0f1;
             margin-top: auto;
-            border-top: 4px solid var(--theme-green);
+            border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border instead of thick green */
+            position: relative;
+            overflow: hidden;
         }
 
-        .app-footer .brand-title {
+        /* Subtle glowing orb in background */
+        .app-footer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(82, 183, 108, 0.1) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .footer-brand-title {
             color: #ffffff;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .app-footer p.text-muted {
-            color: #aeb9c3 !important;
-        }
-        
-        .app-footer small.text-muted {
-            color: #7b8b9a !important;
+            color: #9ba9b4 !important;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
+        .footer-title {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Footer Links with Hover Animation */
+        .footer-link {
+            color: #9ba9b4;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        .footer-link i {
+            font-size: 0.8rem;
+            transition: margin-right 0.3s ease;
+            color: var(--theme-green);
+        }
+        .footer-link:hover {
+            color: #ffffff;
+            text-decoration: none;
+            transform: translateX(5px);
+        }
+
+        /* Premium Social Icons */
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-right: 12px;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .social-icon:hover {
+            background: var(--theme-green);
+            color: white;
+            transform: translateY(-5px) scale(1.1);
+            border-color: var(--theme-green);
+            box-shadow: 0 10px 20px rgba(82, 183, 108, 0.3);
+            text-decoration: none;
+        }
+
+        /* Contact Info Alignment */
+        .footer-contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #9ba9b4;
+        }
+        .footer-contact-item i {
+            color: var(--theme-green);
+            font-size: 1.2rem;
+            width: 30px;
+            display: inline-block;
+        }
+
+        /* Bottom Bar */
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 20px 0;
+            margin-top: 40px;
+        }
 
     </style>
 </head>
@@ -259,11 +348,79 @@
         </div>
     </main>
 
-    <footer class="app-footer py-5">
-        <div class="container text-center">
-            <h5 class="mb-2 brand-title">Harvestify</h5>
-            <p class="mb-3 text-muted" style="font-size: 0.95rem;">Made with care by Ayushman</p>
-            <small class="text-muted font-weight-light">&copy; {{ current_year if current_year is defined else '2026' }} Harvestify. All rights reserved.</small>
+    <footer class="app-footer pt-5 pb-3">
+        <div class="container mt-4">
+            <div class="row">
+                <!-- 1. Brand & About Team -->
+                <div class="col-lg-4 col-md-6 mb-4 pr-lg-5">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" style="height: 40px; border-radius: 6px;" class="mr-3">
+                        <h5 class="mb-0 footer-brand-title">Harvestify</h5>
+                    </div>
+                    <p class="text-muted mb-4">
+                        Empowering farmers with AI-driven insights for crop recommendation, fertilizer suggestions, disease detection, and smart irrigation.
+                    </p>
+                    <div class="d-flex align-items-center">
+                        <div style="width: 4px; height: 40px; background-color: var(--theme-green); margin-right: 15px; border-radius: 2px;"></div>
+                        <div>
+                            <small class="text-uppercase" style="color: var(--theme-green); font-weight: 600; font-size: 0.75rem; letter-spacing: 1px;">Developed By</small><br>
+                            <span class="text-white" style="font-weight: 500;">Ayushman and Gungun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Quick Links -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="{{ url_for('home') }}" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                    <a href="{{ url_for('crop_recommend') }}" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Crop Match</a>
+                    <a href="{{ url_for('fertilizer_recommendation') }}" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Fertilizers</a>
+                    <a href="{{ url_for('disease_prediction') }}" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Disease Check</a>
+                    <a href="{{ url_for('mandi_page') }}" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Mandi Prices</a>
+                </div>
+
+                <!-- 3. Legal & Support -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Support</h5>
+                    <a href="#" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Privacy Policy</a>
+                    <a href="#" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Terms of Service</a>
+                    <a href="#" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Help Center</a>
+                    <a href="#" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                </div>
+
+                <!-- 4 & 5. Contact & Social -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="footer-title">Get In Touch</h5>
+                    
+                    <div class="footer-contact-item">
+                        <i class="fa fa-envelope"></i>
+                        <span>ayushmanraj430@gmail.com</span>
+                    </div>
+                    <div class="footer-contact-item mb-4">
+                        <i class="fa fa-phone"></i>
+                        <span>+91 7485856647</span>
+                    </div>
+                    
+                    <h5 class="footer-title mt-4 mb-3" style="font-size: 0.9rem;">Follow Us</h5>
+                    <div class="d-flex">
+                        <a href="https://github.com/ayushmanraj25/Harvestify1" target="_blank" class="social-icon" title="GitHub"><i class="fa fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/ayushman-raj-7446b12b7/" target="_blank" class="social-icon" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/ayushman.one8" target="_blank" class="social-icon" title="Instagram"><i class="fa fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Copyright Bar -->
+            <div class="footer-bottom mt-5">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-left mb-3 mb-md-0">
+                        <small style="color: #7b8b9a;">&copy; {{ current_year if current_year is defined else '2026' }} Harvestify. All rights reserved.</small>
+                    </div>
+                    <div class="col-md-6 text-center text-md-right">
+                        <small style="color: #7b8b9a;">Built with <i class="fa fa-heart text-danger mx-1"></i> for smarter farming</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
