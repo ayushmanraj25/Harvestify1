@@ -385,7 +385,7 @@
                     <a href="#" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Privacy Policy</a>
                     <a href="#" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Terms of Service</a>
                     <a href="#" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Help Center</a>
-                    <a href="#" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                    <a href="#" data-toggle="modal" data-target="#feedbackModal" class="footer-link"><i class="fa fa-angle-right mr-2"></i>Send Feedback</a>
                 </div>
 
                 <!-- 4 & 5. Contact & Social -->
@@ -448,6 +448,47 @@
     </script>
 
     <script src="{{ url_for('static', filename='scripts/cities.js') }}"></script>
+
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="border-radius: 15px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--theme-green), #45a05b); color: white; border-radius: 15px 15px 0 0; border-bottom: none;">
+                    <h5 class="modal-title font-weight-bold" id="feedbackModalLabel">We'd love to hear from you!</h5>
+                    <button type="button" class="close text-white shadow-none" data-dismiss="modal" aria-label="Close" style="opacity: 0.8;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-4">
+                    <form action="https://formsubmit.co/dallaa.one8@gmail.com" method="POST" id="feedbackForm">
+                        <!-- FormSubmit settings -->
+                        <input type="hidden" name="_subject" value="New Feedback from Harvestify User">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        
+                        <div class="form-group mb-3">
+                            <label for="name" class="font-weight-bold" style="font-size: 0.9rem; color: #555;">Your Name</label>
+                            <input type="text" name="name" class="form-control" style="border-radius: 8px; background: #f8f9fa;" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="email" class="font-weight-bold" style="font-size: 0.9rem; color: #555;">Email Address</label>
+                            <input type="email" name="email" class="form-control" style="border-radius: 8px; background: #f8f9fa;" required>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="message" class="font-weight-bold" style="font-size: 0.9rem; color: #555;">Your Message / Doubt</label>
+                            <textarea name="message" class="form-control" rows="4" style="border-radius: 8px; background: #f8f9fa; resize: none;" placeholder="How can we help?" required></textarea>
+                        </div>
+
+                        <!-- Web3Forms Honeypot for Spam Protection -->
+                        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
+                        <button type="submit" class="btn btn-success btn-block" style="border-radius: 8px; font-weight: 600; padding: 10px;">Send Feedback</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% include 'setting.html' %}
 
     {% block scripts %}{% endblock %}
