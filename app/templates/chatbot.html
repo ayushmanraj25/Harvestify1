@@ -210,6 +210,23 @@
     0%, 100% { transform: translateY(0); opacity: 0.4; }
     50% { transform: translateY(-4px); opacity: 1; }
 }
+
+/* Mobile Responsiveness for Chatbot */
+@media (max-width: 768px) {
+    .chatbot-window {
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        height: 85vh !important;
+        border-radius: 20px 20px 0 0 !important;
+        transform-origin: bottom center !important;
+    }
+    .chatbot-btn {
+        bottom: 20px !important;
+        right: 20px !important;
+    }
+}
 </style>
 
 <script>

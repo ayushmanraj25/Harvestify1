@@ -209,6 +209,25 @@
         font-family: 'Poppins', sans-serif; font-size: 0.9rem; outline: none;
     }
     body.dark-theme .goog-te-combo { background: #2d2d2d; color: #fff; border-color: #444; }
+
+    /* Mobile Responsiveness for Settings Modal */
+    @media (max-width: 768px) {
+        .settings-modal {
+            top: auto;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            width: 100% !important;
+            max-width: 100vw !important;
+            border-radius: 20px 20px 0 0;
+            max-height: 85vh;
+            transform-origin: bottom center;
+        }
+        .floating-settings-btn {
+            top: 80px;
+            padding: 8px 6px 8px 10px;
+        }
+    }
 </style>
 
 <!-- Floating Settings Button -->
