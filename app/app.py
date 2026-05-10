@@ -88,7 +88,7 @@ scaler_path = 'models/scaler.pkl'
 scaler = pickle.load(open(scaler_path, 'rb'))
 
 # Load fertilizer dataset for recommendations
-fertilizer_df = pd.read_csv('Data-raw/fertilizer.csv')
+fertilizer_df = pd.read_csv('Data-raw/Fertilizer.csv')
 
 # loading production prediction model
 production_model_path = 'models/production_pipeline.pkl'
