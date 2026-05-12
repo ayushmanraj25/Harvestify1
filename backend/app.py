@@ -19,7 +19,15 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv() 
- 
+
+# Define absolute paths to support separated frontend/backend structure
+base_dir = os.path.dirname(os.path.abspath(__file__))
+frontend_dir = os.path.join(base_dir, '..', 'frontend')
+template_dir = os.path.join(frontend_dir, 'templates')
+static_dir = os.path.join(frontend_dir, 'static')
+models_dir = os.path.join(base_dir, 'models')
+data_raw_dir = os.path.join(base_dir, 'Data-raw')
+
 # -------------------------LOADING THE TRAINED MODELS -----------------------------------------------
 
 # Loading plant disease classification model
@@ -63,7 +71,7 @@ disease_classes = ['Apple___Apple_scab',
                    'Tomato___Tomato_mosaic_virus',
                    'Tomato___healthy']
 
-disease_model_path = 'models/plant-disease-model-new.pth'
+disease_model_path = os.path.join(models_dir, 'plant-disease-model-new.pth')
 disease_model = ResNet9(3, len(disease_classes))
 disease_model.load_state_dict(torch.load(
     disease_model_path, map_location=torch.device('cpu')))
@@ -72,32 +80,32 @@ disease_model.eval()
 
 # Loading crop recommendation model
 
-crop_recommendation_model_path = 'models/RandomForest.pkl'
+crop_recommendation_model_path = os.path.join(models_dir, 'RandomForest.pkl')
 crop_recommendation_model = pickle.load(
     open(crop_recommendation_model_path, 'rb'))
 
 
 # loading fertilizer recommendation model
-fertilizer_model_path = 'models/fertilizer_model.pkl'
+fertilizer_model_path = os.path.join(models_dir, 'fertilizer_model.pkl')
 fertilizer_model = pickle.load(open(fertilizer_model_path, 'rb'))
 
-label_encoder_path = 'models/label_encoder.pkl'
+label_encoder_path = os.path.join(models_dir, 'label_encoder.pkl')
 label_encoder = pickle.load(open(label_encoder_path, 'rb'))
 
-scaler_path = 'models/scaler.pkl'
+scaler_path = os.path.join(models_dir, 'scaler.pkl')
 scaler = pickle.load(open(scaler_path, 'rb'))
 
 # Load fertilizer dataset for recommendations
-fertilizer_df = pd.read_csv('Data-raw/Fertilizer.csv')
+fertilizer_df = pd.read_csv(os.path.join(data_raw_dir, 'Fertilizer.csv'))
 
 # loading production prediction model
-production_model_path = 'models/production_pipeline.pkl'
+production_model_path = os.path.join(models_dir, 'production_pipeline.pkl')
 production_model = pickle.load(open(production_model_path, 'rb'))
 
 # ✅ ADD THIS HERE
-irrigation_model = pickle.load(open('models/irrigation_model.pkl', 'rb'))
+irrigation_model = pickle.load(open(os.path.join(models_dir, 'irrigation_model.pkl'), 'rb'))
 # load columns (VERY IMPORTANT)
-irrigation_columns = pickle.load(open('models/irrigation_columns.pkl', 'rb'))
+irrigation_columns = pickle.load(open(os.path.join(models_dir, 'irrigation_columns.pkl'), 'rb'))
 
 
 # Custom functions for calculations
@@ -288,7 +296,7 @@ def get_fertilizer_advice(N, P, K, pH, crop_name):
 # ------------------------------------ FLASK APP -------------------------------------------------
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
 # render home page
 
@@ -573,7 +581,7 @@ def api_mandi_prices():
     crop = request.args.get('crop', '').lower()
     
     try:
-        with open('app/static/data/fallback_mandi_prices.json', 'r') as f:
+        with open(os.path.join(static_dir, 'data', 'fallback_mandi_prices.json'), 'r') as f:
             all_data = json.load(f)
             
         filtered_data = all_data
@@ -678,5 +686,6 @@ Context: {feature_context}"""
     app.run(debug=True)'''
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5003)))
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5003)), debug=True)
 
