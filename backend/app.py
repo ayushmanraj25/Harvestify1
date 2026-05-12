@@ -1,5 +1,11 @@
 # Importing essential libraries and modules
+import sys
+import os
 
+# Ensure the backend directory is in the Python path for deployment imports
+base_dir = os.path.dirname(os.path.abspath(__file__))
+if base_dir not in sys.path:
+    sys.path.insert(0, base_dir)
 from flask import Flask, render_template, request
 from markupsafe import Markup
 import numpy as np
